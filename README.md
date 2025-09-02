@@ -40,32 +40,121 @@ Use the trained model to predict  for a new input value .
 
 ## PROGRAM
 
-### Name:
+### Name: AKASH CT
+### REGISTERN NO: 212224240007
 
 ### Register Number:
 
-```python
+```
+import torch
+import torch.nn as nn
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+x=torch.linspace(1,50,50).reshape(-1,1)
+torch.manual_seed(9999)
+e= torch.randint(low=-8, high=9, size=(50,1),dtype=torch.float)
+
+
+y = 2*X + 1 + e
+print(y.shape)
+
+plt.scatter(X.numpy(), y.numpy(),color='red')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Generated Data for Linear Regression')
+plt.show()
+
+
+torch.manual_seed(59)
+
+
 class Model(nn.Module):
     def __init__(self, in_features, out_features):
         super().__init__()
-        #Include your code here
+        self.linear = nn.Linear(in_features, out_features)
+
+    def forward(self, x):
+        y_pred = self.linear(x)
+        return y_pred
 
 
+torch.manual_seed(59)
+model = Model(1, 1)
+print('Weight:', model.linear.weight.item())
+print('Bias:  ', model.linear.bias.item())
 
-# Initialize the Model, Loss Function, and Optimizer
+loss_function = nn.MSELoss()
+
+optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+
+epochs = 50
+losses = []
+
+for epoch in range(1, epochs + 1):
+    optimizer.zero_grad()
+    y_pred = model(X)
+    loss = loss_function(y_pred, y)
+    losses.append(loss.item())
+
+    loss.backward()
+    optimizer.step()
+
+
+plt.plot(range(epochs), losses)
+plt.ylabel('Loss')
+plt.xlabel('epoch');
+plt.show()
+
+
+x1 = torch.tensor([X.min().item(), X.max().item()])
+
+
+w1, b1 = model.linear.weight.item(), model.linear.bias.item()
+
+
+y1 = x1 * w1 + b1
+
+
+print(f'Final Weight: {w1:.8f}, Final Bias: {b1:.8f}')
+print(f'X range: {x1.numpy()}')
+print(f'Predicted Y values: {y1.numpy()}')
+
+
+plt.scatter(X.numpy(), y.numpy(), label="Original Data")
+plt.plot(x1.numpy(), y1.numpy(), 'r', label="Best-Fit Line")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Trained Model: Best-Fit Line')
+plt.legend()
+plt.show()
+
+
 
 ```
 
 ### Dataset Information
-Include screenshot of the generated data
+<img width="970" height="575" alt="image" src="https://github.com/user-attachments/assets/3c77802c-0e0a-4b31-a431-1ee3d1c65dcf" />
+
 
 ### OUTPUT
 Training Loss Vs Iteration Plot
+<img width="1003" height="603" alt="image" src="https://github.com/user-attachments/assets/5da9b2ec-df0a-4e40-bb67-92f52cc56e1c" />
+
 Best Fit line plot
-Include your plot here
+<img width="951" height="567" alt="image" src="https://github.com/user-attachments/assets/5f1080ac-94af-44aa-9371-a7e192183dcd" />
+
+
 
 ### New Sample Data Prediction
-Include your sample input and output here
+#### SAMPLE INPUT
+<img width="295" height="74" alt="image" src="https://github.com/user-attachments/assets/d8856c57-7854-4a58-ac00-039c1feab4c0" />
+
+#### SAMPLE OUTPUT
+<img width="551" height="93" alt="image" src="https://github.com/user-attachments/assets/a4c8d125-637e-4e0b-a13f-e54494c0b35e" />
+
+
 
 ## RESULT
 Thus, a neural network regression model was successfully developed and trained using PyTorch.
